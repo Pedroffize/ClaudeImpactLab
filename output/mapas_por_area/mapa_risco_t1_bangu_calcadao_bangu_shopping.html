@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_a2e987c1292255efed103b922678b6a7 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    <div style="position:fixed;top:10px;left:50px;z-index:1000;background:rgba(20,20,20,0.92);color:white;padding:8px 14px;border-radius:6px;font-family:Arial;font-size:13px;max-width:60%;"><b>Bangu: Calçadão - Bangu Shopping</b><br>Risco T+1 — Logit L2</div>
+    
+            <div class="folium-map" id="map_a2e987c1292255efed103b922678b6a7" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_a2e987c1292255efed103b922678b6a7 = L.map(
+                "map_a2e987c1292255efed103b922678b6a7",
+                {
+                    center: [-22.877895508732063, -43.466623953546275],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 15,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3b4a4a5a4947cb5b71918bec249dc0c9 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_3b4a4a5a4947cb5b71918bec249dc0c9.addTo(map_a2e987c1292255efed103b922678b6a7);
+        
+    
+            var polygon_b88ffac1320e8c5c3417ddbfa1610c85 = L.polygon(
+                [[-22.881420636427244, -43.46981763521567], [-22.8814230027028, -43.46993011977258], [-22.881415342893124, -43.470042329215026], [-22.881397727887293, -43.47015322506106], [-22.881370320708204, -43.47026178098649], [-22.881333375003813, -43.470366992323946], [-22.881287232699542, -43.470467885361586], [-22.881232320833647, -43.47056352635512], [-22.881169147604805, -43.47065303016989], [-22.881098297668608, -43.47073556847293], [-22.881020426726387, -43.47081037739914], [-22.880936255456522, -43.470876764620726], [-22.877404375920097, -43.47339030772756], [-22.877312242878652, -43.47344904446733], [-22.877215191338, -43.47349768872685], [-22.877114167577066, -43.47353576623254], [-22.877010156603063, -43.473562905742284], [-22.87690417254716, -43.47357884266438], [-22.87679724877632, -43.47358342163645], [-22.876690427817525, -43.47357659803922], [-22.876584751192922, -43.47355843843063], [-22.87648124926483, -43.47352911989574], [-22.876380931189594, -43.47348892831918], [-22.876284775078307, -43.47343825559677], [-22.8761937184604, -43.47337759581365], [-22.876108649142854, -43.47330754042619], [-22.876030396554317, -43.47322877249465], [-22.875959723658568, -43.4731420600229], [-22.87502429149535, -43.471873126081974], [-22.874963188343617, -43.47178148652949], [-22.874910557596234, -43.47168391582275], [-22.874866889705874, -43.47158132320715], [-22.87483259160186, -43.471474664722834], [-22.874807982898368, -43.471364934296076], [-22.87461803973627, -43.47029432575125], [-22.874603518507964, -43.4701844979892], [-22.8745987055825, -43.47007367949885], [-22.87460219457747, -43.4636996732822], [-22.87460767176657, -43.46358290280896], [-22.874623925434225, -43.463467306058924], [-22.874650793131146, -43.463354038367676], [-22.8746880063257, -43.46324423179424], [-22.874735193087687, -43.463138983807475], [-22.874791881805407, -43.463039346317935], [-22.874857505898927, -43.462946315165084], [-22.876922911061957, -43.46030355113398], [-22.876996215756815, -43.46021867912274], [-22.87707695202971, -43.46014206328958], [-22.877164325289804, -43.46007445768645], [-22.877257475624997, -43.46001652769226], [-22.877355486264708, -43.45996884346396], [-22.877457392602246, -43.45993187432463], [-22.877562191688003, -43.45990598414371], [-22.87766885210014, -43.45989142775506], [-22.87777632409551, -43.45988834844791], [-22.879623782127975, -43.45993437420998], [-22.879728236729296, -43.459942438596606], [-22.879831482383224, -43.45996134610856], [-22.879932554971894, -43.459990920210245], [-22.88003051066757, -43.46003088475891], [-22.880124434746357, -43.460080866582466], [-22.880213450130196, -43.46014039896343], [-22.880296725577374, -43.46020892599659], [-22.8803734834451, -43.460285807779606], [-22.880443006951577, -43.46037032638815], [-22.880504646869767, -43.46046169257985], [-22.88055782759039, -43.460559053164296], [-22.88060205249738, -43.460661498970474], [-22.880636908605734, -43.46076807333706], [-22.880662070418357, -43.46087778104633], [-22.880677302965896, -43.460989597618294], [-22.8812674765951, -43.46749365532618], [-22.881269915939406, -43.46752484216088], [-22.881420636427244, -43.46981763521567]],
+                {"bubblingMouseEvents": true, "color": "#4ecdc4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#4ecdc4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_a2e987c1292255efed103b922678b6a7);
+        
+    
+            polygon_b88ffac1320e8c5c3417ddbfa1610c85.bindTooltip(
+                `<div>
+                     Área FM: Bangu: Calçadão - Bangu Shopping
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_fd4e4edbc5eb5d902446fe9f22106895 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var polygon_42e3241caf0e6b3d2a2a2f18778c0ffc = L.polygon(
+                [[-22.878210494132865, -43.461612934065684], [-22.876686129543216, -43.46055159962196], [-22.875108856218123, -43.46153766015076], [-22.87505595664976, -43.4635850470778], [-22.87658032864757, -43.464646383350754], [-22.878157592805554, -43.46366033086878]],
+                {"bubblingMouseEvents": true, "color": "#fd7e38", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd7e38", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_fd4e4edbc5eb5d902446fe9f22106895);
+        
+    
+            polygon_42e3241caf0e6b3d2a2a2f18778c0ffc.bindTooltip(
+                `<div>
+                     P(crime T+1): 43.3%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_bc2ec5df149701fac38cd4e177c61591 = L.polygon(
+                [[-22.88131202045727, -43.46168820871208], [-22.879787712542605, -43.46062686896448], [-22.878210494132865, -43.461612934065684], [-22.878157592805554, -43.46366033086878], [-22.879681908129246, -43.46472167244548], [-22.881259117371197, -43.46373561539132]],
+                {"bubblingMouseEvents": true, "color": "#fff1a9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff1a9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_fd4e4edbc5eb5d902446fe9f22106895);
+        
+    
+            polygon_bc2ec5df149701fac38cd4e177c61591.bindTooltip(
+                `<div>
+                     P(crime T+1): 33.1%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_285fc7d2db5606cd7ba78d8855c8fa42 = L.polygon(
+                [[-22.87658032864757, -43.464646383350754], [-22.87505595664976, -43.4635850470778], [-22.87347863758192, -43.46457109498763], [-22.873425699681146, -43.466618471119276], [-22.874950079084677, -43.46767980921545], [-22.876527388983234, -43.46669376935807]],
+                {"bubblingMouseEvents": true, "color": "#e51e1d", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e51e1d", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_fd4e4edbc5eb5d902446fe9f22106895);
+        
+    
+            polygon_285fc7d2db5606cd7ba78d8855c8fa42.bindTooltip(
+                `<div>
+                     P(crime T+1): 48.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_2a2fccdbd6f95ca6afd99eae2572f852 = L.polygon(
+                [[-22.88115323275259, -43.46783041703201], [-22.879628966701517, -43.46676906832857], [-22.87805171171352, -43.46775511275786], [-22.87799873194939, -43.469802497833406], [-22.87952300540548, -43.47086384835381], [-22.881100251220644, -43.46987781198303]],
+                {"bubblingMouseEvents": true, "color": "#ffffcc", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffffcc", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_fd4e4edbc5eb5d902446fe9f22106895);
+        
+    
+            polygon_2a2fccdbd6f95ca6afd99eae2572f852.bindTooltip(
+                `<div>
+                     P(crime T+1): 30.8%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_aac17032395791b91e14c68d42d38229 = L.polygon(
+                [[-22.87952300540548, -43.47086384835381], [-22.87799873194939, -43.469802497833406], [-22.876421431222983, -43.470788529632486], [-22.876368413127672, -43.47283590388914], [-22.87789269398635, -43.47389725622046], [-22.87946998553773, -43.47291123248552]],
+                {"bubblingMouseEvents": true, "color": "#fffac1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffac1", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_fd4e4edbc5eb5d902446fe9f22106895);
+        
+    
+            polygon_aac17032395791b91e14c68d42d38229.bindTooltip(
+                `<div>
+                     P(crime T+1): 31.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_d478f4f34d7294f4dd0d4ded981e0042 = L.polygon(
+                [[-22.879681908129246, -43.46472167244548], [-22.878157592805554, -43.46366033086878], [-22.87658032864757, -43.464646383350754], [-22.876527388983234, -43.46669376935807], [-22.87805171171352, -43.46775511275786], [-22.879628966701517, -43.46676906832857]],
+                {"bubblingMouseEvents": true, "color": "#800026", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#800026", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_fd4e4edbc5eb5d902446fe9f22106895);
+        
+    
+            polygon_d478f4f34d7294f4dd0d4ded981e0042.bindTooltip(
+                `<div>
+                     P(crime T+1): 54.3%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_f6f89515d301be2dc9e3057cf1a3c3b9 = L.polygon(
+                [[-22.87805171171352, -43.46775511275786], [-22.876527388983234, -43.46669376935807], [-22.874950079084677, -43.46767980921545], [-22.874897101088532, -43.46972718441564], [-22.876421431222983, -43.470788529632486], [-22.87799873194939, -43.469802497833406]],
+                {"bubblingMouseEvents": true, "color": "#ffec9f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffec9f", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_fd4e4edbc5eb5d902446fe9f22106895);
+        
+    
+            polygon_f6f89515d301be2dc9e3057cf1a3c3b9.bindTooltip(
+                `<div>
+                     P(crime T+1): 33.8%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_fd4e4edbc5eb5d902446fe9f22106895.addTo(map_a2e987c1292255efed103b922678b6a7);
+        
+    
+            var feature_group_c56340c9614bf6c17048042b7fcb55ba = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_0b825c1ab506148ac0bbfd3dd7e5cbe5 = L.circleMarker(
+                [-22.87810466533234, -43.465707723767906],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_c56340c9614bf6c17048042b7fcb55ba);
+        
+    
+        var popup_8ad96b4c08bd3b55790fdfdcf96ec5ed = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_cc124755a25c7b954bf00d142b6b2b00 = $(`<div id="html_cc124755a25c7b954bf00d142b6b2b00" style="width: 100.0%; height: 100.0%;"><b>#1 — P(crime T+1): 54.3%</b><br>Decil: 7/10<br><br><b>Fatores que mais explicam:</b><br>1. Calçada obstruída (15.0%)<br>2. Fatores urbanos: total na área (14.6%)<br>3. Crimes acumulados nas últimas 12 semanas (13.9%)</div>`)[0];
+                popup_8ad96b4c08bd3b55790fdfdcf96ec5ed.setContent(html_cc124755a25c7b954bf00d142b6b2b00);
+            
+        
+
+        circle_marker_0b825c1ab506148ac0bbfd3dd7e5cbe5.bindPopup(popup_8ad96b4c08bd3b55790fdfdcf96ec5ed)
+        ;
+
+        
+    
+    
+            circle_marker_0b825c1ab506148ac0bbfd3dd7e5cbe5.bindTooltip(
+                `<div>
+                     #1 — 54.3%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_07e82a6d3ddbb56493709b88fcc7aadb = L.circleMarker(
+                [-22.87500303093851, -43.465632430101095],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_c56340c9614bf6c17048042b7fcb55ba);
+        
+    
+        var popup_d6628c081d11fcf42f8579c2f1a7c421 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_00481d8157a1de8f01ced3a047928ee9 = $(`<div id="html_00481d8157a1de8f01ced3a047928ee9" style="width: 100.0%; height: 100.0%;"><b>#2 — P(crime T+1): 48.2%</b><br>Decil: 6/10<br><br><b>Fatores que mais explicam:</b><br>1. Crimes acumulados nas últimas 12 semanas (32.9%)<br>2. Fatores urbanos: total na área (23.1%)<br>3. Calçada obstruída (22.9%)</div>`)[0];
+                popup_d6628c081d11fcf42f8579c2f1a7c421.setContent(html_00481d8157a1de8f01ced3a047928ee9);
+            
+        
+
+        circle_marker_07e82a6d3ddbb56493709b88fcc7aadb.bindPopup(popup_d6628c081d11fcf42f8579c2f1a7c421)
+        ;
+
+        
+    
+    
+            circle_marker_07e82a6d3ddbb56493709b88fcc7aadb.bindTooltip(
+                `<div>
+                     #2 — 48.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e2d9cb3aaf3bfb6175f068ab92720274 = L.circleMarker(
+                [-22.87663324216766, -43.46259899343697],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_c56340c9614bf6c17048042b7fcb55ba);
+        
+    
+        var popup_8a1c8f6e6709ae0058f5f2ed43e933e3 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_541fafb2d62ea1dbb6611e1b1d33f7f4 = $(`<div id="html_541fafb2d62ea1dbb6611e1b1d33f7f4" style="width: 100.0%; height: 100.0%;"><b>#3 — P(crime T+1): 43.3%</b><br>Decil: 5/10<br><br><b>Fatores que mais explicam:</b><br>1. Crimes acumulados nas últimas 12 semanas (21.6%)<br>2. Houve crime há 2 semanas (20.1%)<br>3. Sem domínio territorial identificado (14.9%)</div>`)[0];
+                popup_8a1c8f6e6709ae0058f5f2ed43e933e3.setContent(html_541fafb2d62ea1dbb6611e1b1d33f7f4);
+            
+        
+
+        circle_marker_e2d9cb3aaf3bfb6175f068ab92720274.bindPopup(popup_8a1c8f6e6709ae0058f5f2ed43e933e3)
+        ;
+
+        
+    
+    
+            circle_marker_e2d9cb3aaf3bfb6175f068ab92720274.bindTooltip(
+                `<div>
+                     #3 — 43.3%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_03a01ecede734c607ccf5170f356ea88 = L.circleMarker(
+                [-22.87647442317494, -43.46874115145372],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_c56340c9614bf6c17048042b7fcb55ba);
+        
+    
+        var popup_d02d456eb60b3248a781745947d452d3 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_b8455c1211419aae140232e140514c4f = $(`<div id="html_b8455c1211419aae140232e140514c4f" style="width: 100.0%; height: 100.0%;"><b>#4 — P(crime T+1): 33.8%</b><br>Decil: 4/10<br><br><b>Fatores que mais explicam:</b><br>1. Câmeras na vizinhança imediata (30.2%)<br>2. Sem domínio territorial identificado (26.1%)<br>3. Crimes acumulados nas últimas 12 semanas (18.8%)</div>`)[0];
+                popup_d02d456eb60b3248a781745947d452d3.setContent(html_b8455c1211419aae140232e140514c4f);
+            
+        
+
+        circle_marker_03a01ecede734c607ccf5170f356ea88.bindPopup(popup_d02d456eb60b3248a781745947d452d3)
+        ;
+
+        
+    
+    
+            circle_marker_03a01ecede734c607ccf5170f356ea88.bindTooltip(
+                `<div>
+                     #4 — 33.8%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4c68288680396bb4733aa259e9dea6ec = L.circleMarker(
+                [-22.879734823409702, -43.46267427265571],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_c56340c9614bf6c17048042b7fcb55ba);
+        
+    
+        var popup_001746d81ba925873da7788d41e46f42 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_21b20351304721d3f7941e4502728f22 = $(`<div id="html_21b20351304721d3f7941e4502728f22" style="width: 100.0%; height: 100.0%;"><b>#5 — P(crime T+1): 33.1%</b><br>Decil: 4/10<br><br><b>Fatores que mais explicam:</b><br>1. Crimes acumulados nas últimas 12 semanas (40.5%)<br>2. Sem domínio territorial identificado (28.0%)<br>3. Câmeras na vizinhança imediata (20.4%)</div>`)[0];
+                popup_001746d81ba925873da7788d41e46f42.setContent(html_21b20351304721d3f7941e4502728f22);
+            
+        
+
+        circle_marker_4c68288680396bb4733aa259e9dea6ec.bindPopup(popup_001746d81ba925873da7788d41e46f42)
+        ;
+
+        
+    
+    
+            circle_marker_4c68288680396bb4733aa259e9dea6ec.bindTooltip(
+                `<div>
+                     #5 — 33.1%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_c56340c9614bf6c17048042b7fcb55ba.addTo(map_a2e987c1292255efed103b922678b6a7);
+        
+    
+            var layer_control_6805c8caa3a7867657d6174b8a9407ad_layers = {
+                base_layers : {
+                    "cartodbdarkmatter" : tile_layer_3b4a4a5a4947cb5b71918bec249dc0c9,
+                },
+                overlays :  {
+                    "Hexes \u2014 risco T+1" : feature_group_fd4e4edbc5eb5d902446fe9f22106895,
+                    "Top 5 hexes \u2014 drivers" : feature_group_c56340c9614bf6c17048042b7fcb55ba,
+                },
+            };
+            let layer_control_6805c8caa3a7867657d6174b8a9407ad = L.control.layers(
+                layer_control_6805c8caa3a7867657d6174b8a9407ad_layers.base_layers,
+                layer_control_6805c8caa3a7867657d6174b8a9407ad_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_a2e987c1292255efed103b922678b6a7);
+
+        
+</script>
+</html>

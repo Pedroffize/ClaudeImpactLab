@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_71237f38401be7de6f1b8c570d029ea1 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    <div style="position:fixed;top:10px;left:50px;z-index:1000;background:rgba(20,20,20,0.92);color:white;padding:8px 14px;border-radius:6px;font-family:Arial;font-size:13px;max-width:60%;"><b>Campo Grande: Estação de Trem - Calçadão</b><br>Risco T+1 — Logit L2</div>
+    
+            <div class="folium-map" id="map_71237f38401be7de6f1b8c570d029ea1" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_71237f38401be7de6f1b8c570d029ea1 = L.map(
+                "map_71237f38401be7de6f1b8c570d029ea1",
+                {
+                    center: [-22.901186651032553, -43.556251487842324],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 15,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3f01795fae66585f70994dddd65f19d5 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_3f01795fae66585f70994dddd65f19d5.addTo(map_71237f38401be7de6f1b8c570d029ea1);
+        
+    
+            var polygon_6e1b9ac858edba21c8813573581eecb7 = L.polygon(
+                [[-22.908155304276324, -43.56089989211784], [-22.908193377180908, -43.561009997150805], [-22.908221023515154, -43.56112367019334], [-22.908237964243686, -43.5612397639469], [-22.908244028382477, -43.561357106678756], [-22.908239154724793, -43.56147451404901], [-22.908223392458993, -43.56159080106506], [-22.90819690067215, -43.561704794042484], [-22.90815994674431, -43.56181534245194], [-22.908112903649695, -43.561921330532186], [-22.908056246192075, -43.56202168855208], [-22.907990546212336, -43.56211540360788], [-22.907916466816555, -43.562201529846895], [-22.907834755683034, -43.56227919801399], [-22.904761330655667, -43.56491679400373], [-22.90467347210058, -43.564984758045725], [-22.904579778461393, -43.56504293687376], [-22.904481181792466, -43.56509075175078], [-22.904378662921097, -43.565127727042565], [-22.904273241690106, -43.56515349494851], [-22.904165966812332, -43.565167799159646], [-22.904057905438002, -43.565170497407316], [-22.90395013253881, -43.56516156287743], [-22.90384372021423, -43.56514108447612], [-22.90373972702659, -43.56510926594417], [-22.903639187470795, -43.565066423829286], [-22.89944250721248, -43.563011499286276], [-22.89935831370212, -43.56296540122131], [-22.899278156453658, -43.56291156920543], [-22.899202643728927, -43.56285041174898], [-22.89913234854435, -43.562782392948094], [-22.89594723386243, -43.55941920439693], [-22.89587145274725, -43.559330481648715], [-22.895804543571884, -43.55923380416628], [-22.895747218414368, -43.55913020084845], [-22.89570008735407, -43.559020774297416], [-22.895663651979348, -43.558906689084715], [-22.895638300049832, -43.558789159357836], [-22.895624301370038, -43.55866943591941], [-22.895621804918225, -43.558548792916554], [-22.895912982950666, -43.54780214106292], [-22.89592151020126, -43.54768594375161], [-22.895940709312033, -43.54757123933814], [-22.895970389643114, -43.54745916678567], [-22.896010256480807, -43.54735083892571], [-22.8960599139638, -43.54724733140889], [-22.89611886901367, -43.547149672024844], [-22.896186536230715, -43.54705883049713], [-22.896262243706357, -43.54697570885462], [-22.896345239694625, -43.54690113247482], [-22.896434700076284, -43.546835841888154], [-22.896529736541694, -43.546780485424506], [-22.89662940541103, -43.5467356127751], [-22.896732717004376, -43.54670166953366], [-22.89683864546863, -43.54667899277101], [-22.89694613896369, -43.546667807687186], [-22.89705413010671, -43.54666822537429], [-22.897161546570896, -43.546680241712245], [-22.897267321733338, -43.54670373740867], [-22.897370405266468, -43.546738479182366], [-22.903021975478158, -43.548982559648444], [-22.903122950248903, -43.549029050257694], [-22.903219049730275, -43.54908632875966], [-22.903309287858523, -43.549153807450274], [-22.903392738710387, -43.54923079395874], [-22.90346854600418, -43.54931649835131], [-22.903535931886534, -43.54941004123632], [-22.90359420491416, -43.54951046278741], [-22.90364276714923, -43.549616732592305], [-22.908155304276324, -43.56089989211784]],
+                {"bubblingMouseEvents": true, "color": "#4ecdc4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#4ecdc4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_71237f38401be7de6f1b8c570d029ea1);
+        
+    
+            polygon_6e1b9ac858edba21c8813573581eecb7.bindTooltip(
+                `<div>
+                     Área FM: Campo Grande: Estação de Trem - Calçadão
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var polygon_559ce3f9e85316226efa7c71ad19c99a = L.polygon(
+                [[-22.8976739352479, -43.548130018754435], [-22.896150555069806, -43.54706852404968], [-22.894573155138502, -43.54805432509739], [-22.894519144627857, -43.55010161264241], [-22.896042532164294, -43.55116310900536], [-22.897619922853004, -43.550177316166405]],
+                {"bubblingMouseEvents": true, "color": "#fffec9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffec9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_559ce3f9e85316226efa7c71ad19c99a.bindTooltip(
+                `<div>
+                     P(crime T+1): 9.8%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_23c326d4e35c4717e07ac59c08bdd253 = L.polygon(
+                [[-22.900774603689694, -43.54820571314674], [-22.89925128028787, -43.547144213140776], [-22.8976739352479, -43.548130018754435], [-22.897619922853004, -43.550177316166405], [-22.899143253614046, -43.55123881783042], [-22.90072058941075, -43.55025302042576]],
+                {"bubblingMouseEvents": true, "color": "#fffac0", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffac0", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_23c326d4e35c4717e07ac59c08bdd253.bindTooltip(
+                `<div>
+                     P(crime T+1): 10.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_c91fe2d6b1179c0d431c142631319bfc = L.polygon(
+                [[-22.905344361481298, -43.551390237686775], [-22.903821144288948, -43.55032872542045], [-22.90224386339043, -43.55131452739091], [-22.902189808931062, -43.55336183341397], [-22.903713033481946, -43.554423347332076], [-22.905290305133644, -43.553437553576664]],
+                {"bubblingMouseEvents": true, "color": "#fece6a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fece6a", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_c91fe2d6b1179c0d431c142631319bfc.bindTooltip(
+                `<div>
+                     P(crime T+1): 18.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_fd32db2dcc01604886090c392520d888 = L.polygon(
+                [[-22.90387516045178, -43.54828140827431], [-22.90235189383219, -43.54721990296708], [-22.900774603689694, -43.54820571314674], [-22.90072058941075, -43.55025302042576], [-22.90224386339043, -43.55131452739091], [-22.903821144288948, -43.55032872542045]],
+                {"bubblingMouseEvents": true, "color": "#fffcc4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffcc4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_fd32db2dcc01604886090c392520d888.bindTooltip(
+                `<div>
+                     P(crime T+1): 10.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_45187788f04a3b3055c8ab1f7254a918 = L.polygon(
+                [[-22.900450125658935, -43.560489494842884], [-22.898926886398257, -43.55942797763924], [-22.897349468566695, -43.56041374125185], [-22.897295299249198, -43.562461013837535], [-22.89881854586113, -43.56352253267494], [-22.90039595443929, -43.562536777294206]],
+                {"bubblingMouseEvents": true, "color": "#fffcc5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffcc5", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_45187788f04a3b3055c8ab1f7254a918.bindTooltip(
+                `<div>
+                     P(crime T+1): 10.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_64fb3d65ce9eab7cdcc1e55eb4b7d9b5 = L.polygon(
+                [[-22.905019630977367, -43.5636740709256], [-22.90349649795102, -43.56261254148676], [-22.901919144261417, -43.5635983014323], [-22.901864932855062, -43.56564558258005], [-22.90338807323197, -43.566707113646366], [-22.904965417664634, -43.56572136193876]],
+                {"bubblingMouseEvents": true, "color": "#febd57", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#febd57", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_64fb3d65ce9eab7cdcc1e55eb4b7d9b5.bindTooltip(
+                `<div>
+                     P(crime T+1): 19.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_82563e61c8088519de9ae0a125c89ce6 = L.polygon(
+                [[-22.903550671072612, -43.5605652491697], [-22.902027488602624, -43.559503726665234], [-22.900450125658935, -43.560489494842884], [-22.90039595443929, -43.562536777294206], [-22.901919144261417, -43.5635983014323], [-22.90349649795102, -43.56261254148676]],
+                {"bubblingMouseEvents": true, "color": "#fee288", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee288", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_82563e61c8088519de9ae0a125c89ce6.bindTooltip(
+                `<div>
+                     P(crime T+1): 15.3%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_da020b72c7e2ff2334c79971c73ce761 = L.polygon(
+                [[-22.900612482380513, -43.55434762260383], [-22.899089201043164, -43.55328611398677], [-22.897511819599938, -43.55427189861111], [-22.897457728742367, -43.55631918363342], [-22.898981017434956, -43.55738069389639], [-22.900558389629847, -43.556394917492476]],
+                {"bubblingMouseEvents": true, "color": "#ffea99", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffea99", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_da020b72c7e2ff2334c79971c73ce761.bindTooltip(
+                `<div>
+                     P(crime T+1): 13.8%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_50eaa767a41f1272621765bb3fa0936d = L.polygon(
+                [[-22.898981017434956, -43.55738069389639], [-22.897457728742367, -43.55631918363342], [-22.895880301660284, -43.55730495547208], [-22.89582617252131, -43.55935222934898], [-22.897349468566695, -43.56041374125185], [-22.898926886398257, -43.55942797763924]],
+                {"bubblingMouseEvents": true, "color": "#fffec9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffec9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_50eaa767a41f1272621765bb3fa0936d.bindTooltip(
+                `<div>
+                     P(crime T+1): 9.8%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_8696cc4dd005d8ba7e7ee65f5c67751d = L.polygon(
+                [[-22.899143253614046, -43.55123881783042], [-22.897619922853004, -43.550177316166405], [-22.896042532164294, -43.55116310900536], [-22.895988481482096, -43.553210395295054], [-22.897511819599938, -43.55427189861111], [-22.899089201043164, -43.55328611398677]],
+                {"bubblingMouseEvents": true, "color": "#fff9bd", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff9bd", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_8696cc4dd005d8ba7e7ee65f5c67751d.bindTooltip(
+                `<div>
+                     P(crime T+1): 10.9%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_932b66cc799bbb4616f045de54b043da = L.polygon(
+                [[-22.897511819599938, -43.55427189861111], [-22.895988481482096, -43.553210395295054], [-22.894411045152356, -43.554196175353916], [-22.894356956188087, -43.556243450509974], [-22.895880301660284, -43.55730495547208], [-22.897457728742367, -43.55631918363342]],
+                {"bubblingMouseEvents": true, "color": "#ffffcc", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffffcc", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_932b66cc799bbb4616f045de54b043da.bindTooltip(
+                `<div>
+                     P(crime T+1): 9.5%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_f1631e3f50d129cbdcbb5a24ddac2a49 = L.polygon(
+                [[-22.903713033481946, -43.554423347332076], [-22.902189808931062, -43.55336183341397], [-22.900612482380513, -43.55434762260383], [-22.900558389629847, -43.556394917492476], [-22.90208162153685, -43.55745643305635], [-22.903658938838387, -43.55647065208715]],
+                {"bubblingMouseEvents": true, "color": "#800026", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#800026", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_f1631e3f50d129cbdcbb5a24ddac2a49.bindTooltip(
+                `<div>
+                     P(crime T+1): 39.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_a43121107652697c3ff82b5646116793 = L.polygon(
+                [[-22.90208162153685, -43.55745643305635], [-22.900558389629847, -43.556394917492476], [-22.898981017434956, -43.55738069389639], [-22.898926886398257, -43.55942797763924], [-22.900450125658935, -43.560489494842884], [-22.902027488602624, -43.559503726665234]],
+                {"bubblingMouseEvents": true, "color": "#fc612f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fc612f", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_a43121107652697c3ff82b5646116793.bindTooltip(
+                `<div>
+                     P(crime T+1): 27.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_459244e1af0d5067ba5784ffd77810ba = L.polygon(
+                [[-22.90224386339043, -43.55131452739091], [-22.90072058941075, -43.55025302042576], [-22.899143253614046, -43.55123881783042], [-22.899089201043164, -43.55328611398677], [-22.900612482380513, -43.55434762260383], [-22.902189808931062, -43.55336183341397]],
+                {"bubblingMouseEvents": true, "color": "#fff0a8", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff0a8", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_459244e1af0d5067ba5784ffd77810ba.bindTooltip(
+                `<div>
+                     P(crime T+1): 12.7%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_56d8e2ac7df41198a655275bf59f8e78 = L.polygon(
+                [[-22.90828249467372, -43.557607913583304], [-22.906759376355808, -43.55654638741745], [-22.905182113953813, -43.55753217295199], [-22.90512797912225, -43.55957947642699], [-22.906651104795586, -43.56064100423234], [-22.90822835794502, -43.559655226924505]],
+                {"bubblingMouseEvents": true, "color": "#fecc68", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fecc68", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_56d8e2ac7df41198a655275bf59f8e78.bindTooltip(
+                `<div>
+                     P(crime T+1): 18.1%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_2bfffb8d55d4f7bfdc0e35c1526748e0 = L.polygon(
+                [[-22.906651104795586, -43.56064100423234], [-22.90512797912225, -43.55957947642699], [-22.903550671072612, -43.5605652491697], [-22.90349649795102, -43.56261254148676], [-22.905019630977367, -43.5636740709256], [-22.906596929772252, -43.56268830641521]],
+                {"bubblingMouseEvents": true, "color": "#fc6832", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fc6832", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_2bfffb8d55d4f7bfdc0e35c1526748e0.bindTooltip(
+                `<div>
+                     P(crime T+1): 26.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_028128a8776f762bf364779140327b1f = L.polygon(
+                [[-22.9068134728921, -43.55449907279587], [-22.905290305133644, -43.553437553576664], [-22.903713033481946, -43.554423347332076], [-22.903658938838387, -43.55647065208715], [-22.905182113953813, -43.55753217295199], [-22.906759376355808, -43.55654638741745]],
+                {"bubblingMouseEvents": true, "color": "#ef3323", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef3323", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_028128a8776f762bf364779140327b1f.bindTooltip(
+                `<div>
+                     P(crime T+1): 30.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_76fabee2b1f427753eea8a8722a47069 = L.polygon(
+                [[-22.905182113953813, -43.55753217295199], [-22.903658938838387, -43.55647065208715], [-22.90208162153685, -43.55745643305635], [-22.902027488602624, -43.559503726665234], [-22.903550671072612, -43.5605652491697], [-22.90512797912225, -43.55957947642699]],
+                {"bubblingMouseEvents": true, "color": "#fd953f", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd953f", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_76fabee2b1f427753eea8a8722a47069.bindTooltip(
+                `<div>
+                     P(crime T+1): 23.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var polygon_f5ccf02f71370489b6c1a62098f65426 = L.polygon(
+                [[-22.909751426815735, -43.56071676003078], [-22.90822835794502, -43.559655226924505], [-22.906651104795586, -43.56064100423234], [-22.906596929772252, -43.56268830641521], [-22.90812000599684, -43.56374984115483], [-22.909697249890844, -43.56276407207956]],
+                {"bubblingMouseEvents": true, "color": "#fd7a37", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd7a37", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 0.5}
+            ).addTo(feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e);
+        
+    
+            polygon_f5ccf02f71370489b6c1a62098f65426.bindTooltip(
+                `<div>
+                     P(crime T+1): 25.4%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e.addTo(map_71237f38401be7de6f1b8c570d029ea1);
+        
+    
+            var feature_group_919ecf3ad73c10346fc24da8bd56fc48 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_8070cf5e5d8ccb93e4c698d37b0713bd = L.circleMarker(
+                [-22.902135728313098, -43.555409135304195],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_919ecf3ad73c10346fc24da8bd56fc48);
+        
+    
+        var popup_5c08a1823e50467d6a2a240bc8d7cdd6 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_eacd6cda359fb0930c5d5d9537d0ebc3 = $(`<div id="html_eacd6cda359fb0930c5d5d9537d0ebc3" style="width: 100.0%; height: 100.0%;"><b>#1 — P(crime T+1): 39.2%</b><br>Decil: 5/10<br><br><b>Fatores que mais explicam:</b><br>1. Efeito fixo da área FM (34.6%)<br>2. Domínio territorial: Milícia (21.3%)<br>3. Fatores urbanos: total na área (10.9%)</div>`)[0];
+                popup_5c08a1823e50467d6a2a240bc8d7cdd6.setContent(html_eacd6cda359fb0930c5d5d9537d0ebc3);
+            
+        
+
+        circle_marker_8070cf5e5d8ccb93e4c698d37b0713bd.bindPopup(popup_5c08a1823e50467d6a2a240bc8d7cdd6)
+        ;
+
+        
+    
+    
+            circle_marker_8070cf5e5d8ccb93e4c698d37b0713bd.bindTooltip(
+                `<div>
+                     #1 — 39.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_83c53fbc11f1eea608ab569ac82a2f15 = L.circleMarker(
+                [-22.905236222624378, -43.55548486533348],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_919ecf3ad73c10346fc24da8bd56fc48);
+        
+    
+        var popup_022e7077f7cefd99b33ee15196f1cd44 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_f8a23e8b9665de48eb4c7ac452e7f1b8 = $(`<div id="html_f8a23e8b9665de48eb4c7ac452e7f1b8" style="width: 100.0%; height: 100.0%;"><b>#2 — P(crime T+1): 30.0%</b><br>Decil: 3/10<br><br><b>Fatores que mais explicam:</b><br>1. Efeito fixo da área FM (42.4%)<br>2. Domínio territorial: Milícia (26.1%)<br>3. Fatores urbanos: total na área (8.6%)</div>`)[0];
+                popup_022e7077f7cefd99b33ee15196f1cd44.setContent(html_f8a23e8b9665de48eb4c7ac452e7f1b8);
+            
+        
+
+        circle_marker_83c53fbc11f1eea608ab569ac82a2f15.bindPopup(popup_022e7077f7cefd99b33ee15196f1cd44)
+        ;
+
+        
+    
+    
+            circle_marker_83c53fbc11f1eea608ab569ac82a2f15.bindTooltip(
+                `<div>
+                     #2 — 30.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1082449f54c8d532baedfb3c25432f35 = L.circleMarker(
+                [-22.90050427072255, -43.55844220824056],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_919ecf3ad73c10346fc24da8bd56fc48);
+        
+    
+        var popup_45f8bf807a997d04e92a61e02338e36f = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_62a6a26d2b4b1fe0dff19a40a5b31c30 = $(`<div id="html_62a6a26d2b4b1fe0dff19a40a5b31c30" style="width: 100.0%; height: 100.0%;"><b>#3 — P(crime T+1): 27.0%</b><br>Decil: 3/10<br><br><b>Fatores que mais explicam:</b><br>1. Efeito fixo da área FM (41.4%)<br>2. Crimes acumulados nas últimas 12 semanas (13.1%)<br>3. Retenção de tráfego (13.1%)</div>`)[0];
+                popup_45f8bf807a997d04e92a61e02338e36f.setContent(html_62a6a26d2b4b1fe0dff19a40a5b31c30);
+            
+        
+
+        circle_marker_1082449f54c8d532baedfb3c25432f35.bindPopup(popup_45f8bf807a997d04e92a61e02338e36f)
+        ;
+
+        
+    
+    
+            circle_marker_1082449f54c8d532baedfb3c25432f35.bindTooltip(
+                `<div>
+                     #3 — 27.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f77324f92408bc83618e3ed3d31c2df0 = L.circleMarker(
+                [-22.905073818130006, -43.56162677575326],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_919ecf3ad73c10346fc24da8bd56fc48);
+        
+    
+        var popup_58fe9ca77ff3fab889882d1ab9d07e11 = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_115bd8ba213f597889ddd5bbb49658a6 = $(`<div id="html_115bd8ba213f597889ddd5bbb49658a6" style="width: 100.0%; height: 100.0%;"><b>#4 — P(crime T+1): 26.6%</b><br>Decil: 3/10<br><br><b>Fatores que mais explicam:</b><br>1. Efeito fixo da área FM (43.5%)<br>2. Domínio territorial: Milícia (26.8%)<br>3. Fatores urbanos: total na área (8.1%)</div>`)[0];
+                popup_58fe9ca77ff3fab889882d1ab9d07e11.setContent(html_115bd8ba213f597889ddd5bbb49658a6);
+            
+        
+
+        circle_marker_f77324f92408bc83618e3ed3d31c2df0.bindPopup(popup_58fe9ca77ff3fab889882d1ab9d07e11)
+        ;
+
+        
+    
+    
+            circle_marker_f77324f92408bc83618e3ed3d31c2df0.bindTooltip(
+                `<div>
+                     #4 — 26.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_93b32f7f1eb072072fc058ee8262be86 = L.circleMarker(
+                [-22.90817419505263, -43.56170253611676],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bd0026", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(feature_group_919ecf3ad73c10346fc24da8bd56fc48);
+        
+    
+        var popup_c70652e3db47631b4ac3253c077ef55d = L.popup({
+  "maxWidth": 340,
+});
+
+        
+            
+                var html_324cf5a3124cd00cac96c1ba41957f08 = $(`<div id="html_324cf5a3124cd00cac96c1ba41957f08" style="width: 100.0%; height: 100.0%;"><b>#5 — P(crime T+1): 25.4%</b><br>Decil: 2/10<br><br><b>Fatores que mais explicam:</b><br>1. Efeito fixo da área FM (47.9%)<br>2. Domínio territorial: Milícia (29.5%)<br>3. Crimes acumulados nas últimas 12 semanas (11.4%)</div>`)[0];
+                popup_c70652e3db47631b4ac3253c077ef55d.setContent(html_324cf5a3124cd00cac96c1ba41957f08);
+            
+        
+
+        circle_marker_93b32f7f1eb072072fc058ee8262be86.bindPopup(popup_c70652e3db47631b4ac3253c077ef55d)
+        ;
+
+        
+    
+    
+            circle_marker_93b32f7f1eb072072fc058ee8262be86.bindTooltip(
+                `<div>
+                     #5 — 25.4%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_919ecf3ad73c10346fc24da8bd56fc48.addTo(map_71237f38401be7de6f1b8c570d029ea1);
+        
+    
+            var layer_control_b77021c4ca7fd03818ea487990b6870b_layers = {
+                base_layers : {
+                    "cartodbdarkmatter" : tile_layer_3f01795fae66585f70994dddd65f19d5,
+                },
+                overlays :  {
+                    "Hexes \u2014 risco T+1" : feature_group_7d17c46b31bab3e6d1f7fbc4bd3a341e,
+                    "Top 5 hexes \u2014 drivers" : feature_group_919ecf3ad73c10346fc24da8bd56fc48,
+                },
+            };
+            let layer_control_b77021c4ca7fd03818ea487990b6870b = L.control.layers(
+                layer_control_b77021c4ca7fd03818ea487990b6870b_layers.base_layers,
+                layer_control_b77021c4ca7fd03818ea487990b6870b_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_71237f38401be7de6f1b8c570d029ea1);
+
+        
+</script>
+</html>

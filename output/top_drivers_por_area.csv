@@ -1,0 +1,46 @@
+area_fm,rank_area,hex_id,P(crime)%,decil_risco,Driver 1,contrib1_%,Driver 2,contrib2_%,Driver 3,contrib3_%
+Bangu: Calçadão - Bangu Shopping,1,89a8a0663cbffff,54.3,7,Calçada obstruída,15.0,Fatores urbanos: total na área,14.6,Crimes acumulados nas últimas 12 semanas,13.9
+Bangu: Calçadão - Bangu Shopping,2,89a8a066353ffff,48.2,6,Crimes acumulados nas últimas 12 semanas,32.9,Fatores urbanos: total na área,23.1,Calçada obstruída,22.9
+Bangu: Calçadão - Bangu Shopping,3,89a8a066227ffff,43.3,5,Crimes acumulados nas últimas 12 semanas,21.6,Houve crime há 2 semanas,20.1,Sem domínio territorial identificado,14.9
+Bangu: Calçadão - Bangu Shopping,4,89a8a0663cfffff,33.8,4,Câmeras na vizinhança imediata,30.2,Sem domínio territorial identificado,26.0,Crimes acumulados nas últimas 12 semanas,18.8
+Bangu: Calçadão - Bangu Shopping,5,89a8a066237ffff,33.1,4,Crimes acumulados nas últimas 12 semanas,40.5,Sem domínio territorial identificado,28.0,Câmeras na vizinhança imediata,20.4
+Campo Grande: Estação de Trem - Calçadão,1,89a8a0291d3ffff,39.2,5,Efeito fixo da área FM,34.6,Domínio territorial: Milícia,21.3,Fatores urbanos: total na área,10.9
+Campo Grande: Estação de Trem - Calçadão,2,89a8a02956bffff,30.0,3,Efeito fixo da área FM,42.4,Domínio territorial: Milícia,26.1,Fatores urbanos: total na área,8.6
+Campo Grande: Estação de Trem - Calçadão,3,89a8a0291d7ffff,27.0,3,Efeito fixo da área FM,41.4,Crimes acumulados nas últimas 12 semanas,13.1,Retenção de tráfego,13.1
+Campo Grande: Estação de Trem - Calçadão,4,89a8a029567ffff,26.6,3,Efeito fixo da área FM,43.5,Domínio territorial: Milícia,26.8,Fatores urbanos: total na área,8.1
+Campo Grande: Estação de Trem - Calçadão,5,89a8a029577ffff,25.4,2,Efeito fixo da área FM,47.9,Domínio territorial: Milícia,29.5,Crimes acumulados nas últimas 12 semanas,11.4
+Estações São Francisco Xavier - Afonso Pena,1,89a8a061623ffff,91.5,10,Crimes acumulados nas últimas 12 semanas,66.3,Efeito fixo da área FM,5.6,Houve crime há 2 semanas,4.9
+Estações São Francisco Xavier - Afonso Pena,2,89a8a061677ffff,76.1,9,Crimes acumulados nas últimas 12 semanas,41.3,Fatores urbanos: total na área,12.3,Houve crime na semana anterior,8.8
+Estações São Francisco Xavier - Afonso Pena,3,89a8a061633ffff,63.5,8,Crimes acumulados nas últimas 12 semanas,35.4,Houve crime na semana anterior,11.9,Efeito fixo da área FM,10.6
+Estações São Francisco Xavier - Afonso Pena,4,89a8a06160fffff,61.4,8,Crimes acumulados nas últimas 12 semanas,45.9,Efeito fixo da área FM,12.1,Houve crime há 2 semanas,10.7
+Estações São Francisco Xavier - Afonso Pena,5,89a8a061617ffff,60.3,8,Crimes acumulados nas últimas 12 semanas,25.3,Fatores urbanos: total na área,17.7,Houve crime na semana anterior,11.9
+Jardim de Alah,1,89a8a07ab47ffff,52.4,7,Crimes acumulados nas últimas 12 semanas,21.8,Fatores urbanos: total na área,20.4,Efeito fixo da área FM,10.9
+Jardim de Alah,2,89a8a07ab73ffff,43.4,5,Fatores urbanos: total na área,39.9,Situação de rua,19.6,Crimes acumulados nas últimas 12 semanas,8.1
+Jardim de Alah,3,89a8a07ab67ffff,39.8,5,Fatores urbanos: total na área,17.7,Efeito fixo da área FM,15.8,Houve crime na semana anterior,14.8
+Jardim de Alah,4,89a8a07ab0bffff,39.0,5,Fatores urbanos: total na área,20.1,Efeito fixo da área FM,15.4,Crimes acumulados nas últimas 12 semanas,12.3
+Jardim de Alah,5,89a8a07ab7bffff,30.1,3,Efeito fixo da área FM,22.8,Fatores urbanos: total na área,19.2,Sem domínio territorial identificado,12.6
+Metrô Botafogo - Rua São Clemente - Rua Voluntários da Pátria,1,89a8a07884fffff,88.2,10,Crimes acumulados nas últimas 12 semanas,39.6,Fatores urbanos: total na área,19.5,Câmeras na vizinhança imediata,5.9
+Metrô Botafogo - Rua São Clemente - Rua Voluntários da Pátria,2,89a8a07884bffff,86.0,10,Crimes acumulados nas últimas 12 semanas,43.1,Fatores urbanos: total na área,10.7,Câmeras na vizinhança imediata,10.0
+Metrô Botafogo - Rua São Clemente - Rua Voluntários da Pátria,3,89a8a078abbffff,76.6,9,Crimes acumulados nas últimas 12 semanas,35.4,Câmeras na vizinhança imediata,15.5,Houve crime na semana anterior,8.4
+Metrô Botafogo - Rua São Clemente - Rua Voluntários da Pátria,4,89a8a07880bffff,69.3,9,Crimes acumulados nas últimas 12 semanas,26.5,Fatores urbanos: total na área,21.7,Houve crime na semana anterior,7.8
+Metrô Botafogo - Rua São Clemente - Rua Voluntários da Pátria,5,89a8a078ab3ffff,67.1,8,Fatores urbanos: total na área,23.9,Crimes acumulados nas últimas 12 semanas,13.7,Câmeras na vizinhança imediata,13.5
+Praia de Botafogo - Rua Marquês de Abrantes,1,89a8a06a493ffff,79.8,10,Crimes acumulados nas últimas 12 semanas,41.1,Fatores urbanos: total na área,8.9,Câmeras na vizinhança imediata,8.2
+Praia de Botafogo - Rua Marquês de Abrantes,2,89a8a078a33ffff,62.1,8,Crimes acumulados nas últimas 12 semanas,15.2,Fatores urbanos: total na área,14.2,Câmeras na vizinhança imediata,13.2
+Praia de Botafogo - Rua Marquês de Abrantes,3,89a8a06a49bffff,57.4,8,Crimes acumulados nas últimas 12 semanas,50.8,Efeito fixo da área FM,12.0,Houve crime na semana anterior,10.9
+Praia de Botafogo - Rua Marquês de Abrantes,4,89a8a078aa3ffff,56.1,8,Crimes acumulados nas últimas 12 semanas,27.6,Câmeras na vizinhança imediata,13.6,Efeito fixo da área FM,12.0
+Praia de Botafogo - Rua Marquês de Abrantes,5,89a8a078aabffff,55.8,7,Crimes acumulados nas últimas 12 semanas,22.9,Câmeras na vizinhança imediata,15.0,Efeito fixo da área FM,11.9
+Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia,1,89a8a06a097ffff,96.4,10,Crimes acumulados nas últimas 12 semanas,60.0,Efeito fixo da área FM,9.0,Crime na vizinhança imediata (semana anterior),6.8
+Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia,2,89a8a06a55bffff,95.9,10,Crimes acumulados nas últimas 12 semanas,66.6,Efeito fixo da área FM,9.3,Crime na vizinhança imediata (semana anterior),5.6
+Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia,3,89a8a06a0a3ffff,94.8,10,Crimes acumulados nas últimas 12 semanas,43.2,Câmeras na vizinhança imediata,12.0,Fatores urbanos: total na área,9.6
+Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia,4,89a8a06a093ffff,92.5,10,Crimes acumulados nas últimas 12 semanas,58.5,Efeito fixo da área FM,10.7,Crime na vizinhança imediata (semana anterior),6.5
+Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia,5,89a8a06a42fffff,90.4,10,Crimes acumulados nas últimas 12 semanas,61.1,Efeito fixo da área FM,11.7,Houve crime na semana anterior,6.8
+Rodoviária - Terminal Gentileza - Estação Leopoldina,1,89a8a06a533ffff,89.8,10,Crimes acumulados nas últimas 12 semanas,54.1,Câmeras na vizinhança imediata,15.3,Efeito fixo da área FM,8.6
+Rodoviária - Terminal Gentileza - Estação Leopoldina,2,89a8a06a577ffff,89.3,10,Crimes acumulados nas últimas 12 semanas,56.1,Câmeras na vizinhança imediata,12.0,Efeito fixo da área FM,8.6
+Rodoviária - Terminal Gentileza - Estação Leopoldina,3,89a8a06a5afffff,69.4,9,Câmeras na vizinhança imediata,23.7,Crimes acumulados nas últimas 12 semanas,22.9,Efeito fixo da área FM,12.0
+Rodoviária - Terminal Gentileza - Estação Leopoldina,4,89a8a0612cfffff,66.8,8,Câmeras na vizinhança imediata,25.7,Crimes acumulados nas últimas 12 semanas,25.4,Efeito fixo da área FM,13.3
+Rodoviária - Terminal Gentileza - Estação Leopoldina,5,89a8a06a5b7ffff,53.7,7,Crimes acumulados nas últimas 12 semanas,33.3,Câmeras na vizinhança imediata,21.2,Efeito fixo da área FM,17.4
+Rua Lauro Müller – Avenida General Severiano – Avenida Venceslau Brás,1,89a8a078a8bffff,68.4,9,Crimes acumulados nas últimas 12 semanas,52.0,Houve crime há 4 semanas,7.9,Câmeras na vizinhança imediata,7.7
+Rua Lauro Müller – Avenida General Severiano – Avenida Venceslau Brás,2,89a8a078a8fffff,64.9,8,Crimes acumulados nas últimas 12 semanas,19.8,Câmeras na vizinhança imediata,16.3,Houve crime na semana anterior,11.6
+Rua Lauro Müller – Avenida General Severiano – Avenida Venceslau Brás,3,89a8a078a87ffff,53.3,7,Fatores urbanos: total na área,20.8,Câmeras na vizinhança imediata,14.6,Crimes acumulados nas últimas 12 semanas,14.0
+Rua Lauro Müller – Avenida General Severiano – Avenida Venceslau Brás,4,89a8a078a83ffff,51.0,7,Crimes acumulados nas últimas 12 semanas,31.0,Câmeras na vizinhança imediata,19.3,Fatores urbanos: total na área,11.6
+Rua Lauro Müller – Avenida General Severiano – Avenida Venceslau Brás,5,89a8a078a97ffff,48.4,6,Crimes acumulados nas últimas 12 semanas,27.6,Câmeras na vizinhança imediata,19.1,Houve crime há 2 semanas,12.8
