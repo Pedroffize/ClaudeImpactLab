@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompStat-Rio — Dashboard de Recomendações de Policy</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; color: #1a1a2e; }
+
+.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 24px 32px; }
+.header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { color: #94a3b8; font-size: 0.9rem; }
+.header .meta { margin-top: 12px; font-size: 0.8rem; color: #64748b; }
+.header .areas { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+.area-badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; }
+
+.stats-bar { background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 32px; display: flex; gap: 32px; }
+.stat { text-align: center; }
+.stat .n { font-size: 1.4rem; font-weight: 700; color: #c0392b; }
+.stat .label { font-size: 0.75rem; color: #64748b; }
+
+.container { max-width: 1100px; margin: 24px auto; padding: 0 16px; display: grid; gap: 20px; }
+
+.card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+.card-header { padding: 16px 20px; background: #fafbfc; border-bottom: 1px solid #e2e8f0; }
+.hex-id { font-family: monospace; font-size: 0.75rem; color: #64748b; margin-bottom: 4px; }
+.area-name { font-size: 1rem; font-weight: 600; color: #1e293b; margin-bottom: 8px; }
+.prob-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.prob-badge { padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; color: white; }
+.prob-t2 { background: #e67e22; }
+.prob-t4 { background: #95a5a6; color: #2c3e50; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { padding: 3px 10px; border-radius: 10px; font-size: 0.72rem; font-weight: 500; }
+.tag-pattern { background: #ede9fe; color: #5b21b6; }
+.tag-season { background: #e0f2fe; color: #0369a1; }
+.tag-dominio { background: #dcfce7; color: #166534; }
+.tag-red { background: #fee2e2; color: #991b1b; }
+.tag-green { background: #dcfce7; color: #166534; }
+.tag-jurisd { background: #f0fdf4; color: #15803d; }
+
+.fe-note { font-size: 0.75rem; color: #64748b; margin-top: 6px; font-style: italic; }
+
+.section { padding: 14px 20px; border-bottom: 1px solid #f1f5f9; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+.section-audit { background: #fafbfc; }
+.audit { font-size: 0.78rem; color: #475569; line-height: 1.7; }
+
+.driver-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.driver-rank { width: 24px; height: 24px; border-radius: 50%; background: #1e293b; color: white; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.driver-content { flex: 1; }
+.driver-label { font-size: 0.88rem; font-weight: 500; color: #1e293b; margin-bottom: 4px; }
+.driver-share-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.bar { height: 6px; background: #c0392b; border-radius: 3px; min-width: 2px; }
+.share-pct { font-size: 0.72rem; color: #64748b; white-space: nowrap; }
+
+.policy-item { background: #f8fafc; border-left: 3px solid #3b82f6; padding: 8px 12px; border-radius: 0 6px 6px 0; margin-top: 6px; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
+.policy-orgao { font-weight: 600; font-size: 0.78rem; color: #1d4ed8; grid-column: 1; }
+.policy-acao { font-size: 0.82rem; color: #1e293b; grid-column: 2; }
+.policy-prazo { font-size: 0.72rem; color: #059669; font-weight: 600; grid-column: 1; }
+.policy-ev { font-size: 0.7rem; color: #94a3b8; grid-column: 2; font-style: italic; }
+
+.temporal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+.temporal-stat { background: #f8fafc; padding: 8px 10px; border-radius: 8px; font-size: 0.78rem; color: #475569; }
+.temporal-stat strong { display: block; color: #1e293b; margin-bottom: 2px; }
+.temporal-note { font-size: 0.78rem; color: #94a3b8; font-style: italic; }
+
+.tbar-container { display: flex; flex-direction: column; gap: 4px; }
+.tbar-row { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; }
+.tbar-label { width: 160px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tbar { flex: 1; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+.tbar-fill { height: 100%; background: #6366f1; border-radius: 4px; }
+.tbar-pct { width: 36px; text-align: right; color: #64748b; }
+
+.pol-item { margin-bottom: 6px; font-size: 0.85rem; }
+.pol-modal { font-weight: 600; color: #1e293b; }
+.pol-prazo { color: #64748b; font-size: 0.78rem; }
+
+.constraints { font-size: 0.82rem; color: #475569; line-height: 1.6; }
+
+@media (max-width: 600px) {
+    .temporal-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { flex-wrap: wrap; gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🗺️ CompStat-Rio — Dashboard de Recomendações de Policy</h1>
+    <div class="subtitle">Micropolígonos de alto risco — Horizonte t+1 | Modelo Logit H3 Res-9</div>
+    <div class="meta">Gerado em: 24/05/2026 18:36 | Top 16 micropolígonos (prob &gt; 78.4%)</div>
+    <div class="areas"><span class="area-badge">Presidente Vargas: <strong>10</strong></span><span class="area-badge">Rodoviária: <strong>2</strong></span><span class="area-badge">Metrô Botafogo: <strong>2</strong></span><span class="area-badge">Estações São Francisco Xavier: <strong>1</strong></span><span class="area-badge">Praia de Botafogo: <strong>1</strong></span></div>
+</div>
+
+<div class="stats-bar">
+    <div class="stat"><div class="n">16</div><div class="label">Micropolígonos críticos</div></div>
+    <div class="stat"><div class="n">5</div><div class="label">Áreas FM</div></div>
+    <div class="stat"><div class="n">88%</div><div class="label">Prob. média t+1</div></div>
+    <div class="stat"><div class="n">96%</div><div class="label">Prob. máxima t+1</div></div>
+</div>
+
+<div class="container">
+    
+<div class="card" id="89a8a06a097ffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a097ffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 96.4%</span>
+            <span class="prob-badge prob-t2">t+2: 96.0%</span>
+            <span class="prob-badge prob-t4">t+4: 95.6%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">66.0% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Crimes em micropolígonos vizinhos (risco de spillover)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:15%"></div>
+                    <span class="share-pct">7.5% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio</span>
+                <span class="policy-acao">Ampliar perímetro de patrulha para hexágonos vizinhos — risco de spillover detectado</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Johnson & Bowers 2004: near-repeat se propaga espacialmente</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:14%"></div>
+                    <span class="share-pct">7.2% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Madrugada (00–06h) (39%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (24%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>69%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>3931</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:58px"></div></div><span class="tbar-pct">39%</span></div><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:45px"></div></div><span class="tbar-pct">30%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:26px"></div></div><span class="tbar-pct">18%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:19px"></div></div><span class="tbar-pct">13%</span></div><div class="tbar-row"><span class="tbar-label">Não informado</span><div class="tbar"><div class="tbar-fill" style="width:0px"></div></div><span class="tbar-pct">0%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=35 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a55bffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a55bffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 95.9%</span>
+            <span class="prob-badge prob-t2">t+2: 95.6%</span>
+            <span class="prob-badge prob-t4">t+4: 95.2%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">73.3% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Crimes em micropolígonos vizinhos (risco de spillover)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:12%"></div>
+                    <span class="share-pct">6.2% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio</span>
+                <span class="policy-acao">Ampliar perímetro de patrulha para hexágonos vizinhos — risco de spillover detectado</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Johnson & Bowers 2004: near-repeat se propaga espacialmente</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:12%"></div>
+                    <span class="share-pct">6.0% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Madrugada (00–06h) (41%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (23%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>69%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>3208</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:61px"></div></div><span class="tbar-pct">41%</span></div><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:41px"></div></div><span class="tbar-pct">28%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:26px"></div></div><span class="tbar-pct">18%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:20px"></div></div><span class="tbar-pct">14%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a0a3ffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a0a3ffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 94.8%</span>
+            <span class="prob-badge prob-t2">t+2: 95.0%</span>
+            <span class="prob-badge prob-t4">t+4: 95.1%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:95%"></div>
+                    <span class="share-pct">47.3% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:26%"></div>
+                    <span class="share-pct">13.2% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Desordem urbana difusa (múltiplos fatores)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:21%"></div>
+                    <span class="share-pct">10.5% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 Múltiplos órgãos (Comlurb, RioLuz, SEOP, GM-Rio)</span>
+                <span class="policy-acao">Realizar varredura coordenada multi-órgão — desordem difusa detectada em múltiplas categorias</span>
+                <span class="policy-prazo">⏱ Curto prazo</span>
+                <span class="policy-ev">📚 Wilson & Kelling 1982: broken windows; desordem difusa requer resposta integrada</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (42%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sexta (16%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>63%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>2454</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:62px"></div></div><span class="tbar-pct">42%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:32px"></div></div><span class="tbar-pct">22%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:31px"></div></div><span class="tbar-pct">21%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:23px"></div></div><span class="tbar-pct">16%</span></div><div class="tbar-row"><span class="tbar-label">Não informado</span><div class="tbar"><div class="tbar-fill" style="width:0px"></div></div><span class="tbar-pct">0%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=66 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a093ffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a093ffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 92.5%</span>
+            <span class="prob-badge prob-t2">t+2: 92.0%</span>
+            <span class="prob-badge prob-t4">t+4: 91.4%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">65.5% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Crimes em micropolígonos vizinhos (risco de spillover)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:15%"></div>
+                    <span class="share-pct">7.3% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio</span>
+                <span class="policy-acao">Ampliar perímetro de patrulha para hexágonos vizinhos — risco de spillover detectado</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Johnson & Bowers 2004: near-repeat se propaga espacialmente</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:15%"></div>
+                    <span class="share-pct">7.3% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Madrugada (00–06h) (36%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (23%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>71%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>3197</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:54px"></div></div><span class="tbar-pct">36%</span></div><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:51px"></div></div><span class="tbar-pct">34%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:24px"></div></div><span class="tbar-pct">16%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:19px"></div></div><span class="tbar-pct">13%</span></div><div class="tbar-row"><span class="tbar-label">Não informado</span><div class="tbar"><div class="tbar-fill" style="width:0px"></div></div><span class="tbar-pct">0%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=29 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a061623ffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a061623ffff</div>
+        <div class="area-name">Estações São Francisco Xavier - Afonso Pena</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 91.5%</span>
+            <span class="prob-badge prob-t2">t+2: 91.2%</span>
+            <span class="prob-badge prob-t4">t+4: 90.4%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">70.2% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico de crimes — 2 semanas atrás</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:10%"></div>
+                    <span class="share-pct">5.2% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio</span>
+                <span class="policy-acao">Manter atenção elevada — crime recorrente nas últimas 2 semanas</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Johnson & Bowers 2004: risco near-repeat se propaga por 2–4 semanas</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico de crimes — 4 semanas atrás</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:10%"></div>
+                    <span class="share-pct">5.1% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio</span>
+                <span class="policy-acao">Avaliar padrão periódico — crime ativo há 4 semanas</span>
+                <span class="policy-prazo">⏱ Curto prazo</span>
+                <span class="policy-ev">📚 Mohler et al. 2015: persistência de hotspot</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (44%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Quinta (17%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>57%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>1095</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:65px"></div></div><span class="tbar-pct">44%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:37px"></div></div><span class="tbar-pct">25%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:27px"></div></div><span class="tbar-pct">18%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:19px"></div></div><span class="tbar-pct">13%</span></div><div class="tbar-row"><span class="tbar-label">Não informado</span><div class="tbar"><div class="tbar-fill" style="width:0px"></div></div><span class="tbar-pct">0%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a42fffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a42fffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 90.4%</span>
+            <span class="prob-badge prob-t2">t+2: 90.2%</span>
+            <span class="prob-badge prob-t4">t+4: 89.8%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">69.3% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:16%"></div>
+                    <span class="share-pct">7.8% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico de crimes — 2 semanas atrás</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:12%"></div>
+                    <span class="share-pct">6.1% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio</span>
+                <span class="policy-acao">Manter atenção elevada — crime recorrente nas últimas 2 semanas</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Johnson & Bowers 2004: risco near-repeat se propaga por 2–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Madrugada (00–06h) (41%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (24%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>70%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>3449</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:60px"></div></div><span class="tbar-pct">41%</span></div><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:43px"></div></div><span class="tbar-pct">29%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:26px"></div></div><span class="tbar-pct">18%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:19px"></div></div><span class="tbar-pct">13%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a533ffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a533ffff</div>
+        <div class="area-name">Rodoviária - Terminal Gentileza - Estação Leopoldina</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 89.8%</span>
+            <span class="prob-badge prob-t2">t+2: 89.5%</span>
+            <span class="prob-badge prob-t4">t+4: 89.4%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">59.2% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:33%"></div>
+                    <span class="share-pct">16.7% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:12%"></div>
+                    <span class="share-pct">6.1% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (47%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Quinta (19%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>66%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>914</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:70px"></div></div><span class="tbar-pct">47%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:29px"></div></div><span class="tbar-pct">19%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:26px"></div></div><span class="tbar-pct">17%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:24px"></div></div><span class="tbar-pct">16%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=77 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a577ffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a577ffff</div>
+        <div class="area-name">Rodoviária - Terminal Gentileza - Estação Leopoldina</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 89.3%</span>
+            <span class="prob-badge prob-t2">t+2: 88.9%</span>
+            <span class="prob-badge prob-t4">t+4: 88.9%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">61.4% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:26%"></div>
+                    <span class="share-pct">13.1% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:12%"></div>
+                    <span class="share-pct">6.0% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (43%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sexta (17%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>61%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>1104</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:64px"></div></div><span class="tbar-pct">43%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:30px"></div></div><span class="tbar-pct">20%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:27px"></div></div><span class="tbar-pct">18%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:27px"></div></div><span class="tbar-pct">18%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=61 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a07884fffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a07884fffff</div>
+        <div class="area-name">Metrô Botafogo - Rua São Clemente - Rua Voluntários da Pátria</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 88.2%</span>
+            <span class="prob-badge prob-t2">t+2: 87.6%</span>
+            <span class="prob-badge prob-t4">t+4: 86.8%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:82%"></div>
+                    <span class="share-pct">40.8% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Desordem urbana difusa (múltiplos fatores)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:40%"></div>
+                    <span class="share-pct">20.1% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 Múltiplos órgãos (Comlurb, RioLuz, SEOP, GM-Rio)</span>
+                <span class="policy-acao">Realizar varredura coordenada multi-órgão — desordem difusa detectada em múltiplas categorias</span>
+                <span class="policy-prazo">⏱ Curto prazo</span>
+                <span class="policy-ev">📚 Wilson & Kelling 1982: broken windows; desordem difusa requer resposta integrada</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:12%"></div>
+                    <span class="share-pct">6.1% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (41%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (17%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>70%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>861</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:60px"></div></div><span class="tbar-pct">41%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:44px"></div></div><span class="tbar-pct">30%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:26px"></div></div><span class="tbar-pct">17%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:18px"></div></div><span class="tbar-pct">12%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=32 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a087ffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a087ffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 87.9%</span>
+            <span class="prob-badge prob-t2">t+2: 88.1%</span>
+            <span class="prob-badge prob-t4">t+4: 88.3%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">50.3% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:33%"></div>
+                    <span class="share-pct">16.7% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:16%"></div>
+                    <span class="share-pct">7.9% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Madrugada (00–06h) (35%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (23%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>69%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>3857</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:52px"></div></div><span class="tbar-pct">35%</span></div><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:50px"></div></div><span class="tbar-pct">34%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:25px"></div></div><span class="tbar-pct">17%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:21px"></div></div><span class="tbar-pct">14%</span></div><div class="tbar-row"><span class="tbar-label">Não informado</span><div class="tbar"><div class="tbar-fill" style="width:0px"></div></div><span class="tbar-pct">0%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=59 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a543ffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a06a543ffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 86.6%</span>
+            <span class="prob-badge prob-t2">t+2: 86.4%</span>
+            <span class="prob-badge prob-t4">t+4: 85.4%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">60.3% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Crimes em micropolígonos vizinhos (risco de spillover)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:18%"></div>
+                    <span class="share-pct">9.2% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio</span>
+                <span class="policy-acao">Ampliar perímetro de patrulha para hexágonos vizinhos — risco de spillover detectado</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Johnson & Bowers 2004: near-repeat se propaga espacialmente</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:18%"></div>
+                    <span class="share-pct">8.9% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Madrugada (00–06h) (37%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (22%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>68%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>2325</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:55px"></div></div><span class="tbar-pct">37%</span></div><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:46px"></div></div><span class="tbar-pct">31%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:27px"></div></div><span class="tbar-pct">19%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:20px"></div></div><span class="tbar-pct">14%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)</div>
+    </div>
+</div>
+<div class="card" id="89a8a07884bffff">
+    <div class="card-header" style="border-left: 6px solid #c0392b">
+        <div class="hex-id">89a8a07884bffff</div>
+        <div class="area-name">Metrô Botafogo - Rua São Clemente - Rua Voluntários da Pátria</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#c0392b">t+1: 86.0%</span>
+            <span class="prob-badge prob-t2">t+2: 85.7%</span>
+            <span class="prob-badge prob-t4">t+4: 85.3%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:90%"></div>
+                    <span class="share-pct">44.8% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Desordem urbana difusa (múltiplos fatores)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:22%"></div>
+                    <span class="share-pct">11.1% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 Múltiplos órgãos (Comlurb, RioLuz, SEOP, GM-Rio)</span>
+                <span class="policy-acao">Realizar varredura coordenada multi-órgão — desordem difusa detectada em múltiplas categorias</span>
+                <span class="policy-prazo">⏱ Curto prazo</span>
+                <span class="policy-ev">📚 Wilson & Kelling 1982: broken windows; desordem difusa requer resposta integrada</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:21%"></div>
+                    <span class="share-pct">10.4% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (40%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sexta (16%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>69%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>856</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:59px"></div></div><span class="tbar-pct">40%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:43px"></div></div><span class="tbar-pct">29%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:27px"></div></div><span class="tbar-pct">18%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:19px"></div></div><span class="tbar-pct">13%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=44 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a557ffff">
+    <div class="card-header" style="border-left: 6px solid #e67e22">
+        <div class="hex-id">89a8a06a557ffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#e67e22">t+1: 83.7%</span>
+            <span class="prob-badge prob-t2">t+2: 80.4%</span>
+            <span class="prob-badge prob-t4">t+4: 83.1%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+         | 📞 1 disque-denúncias na semana anterior — reforça justificativa política
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:100%"></div>
+                    <span class="share-pct">66.0% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:19%"></div>
+                    <span class="share-pct">9.7% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico de crimes — 2 semanas atrás</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:15%"></div>
+                    <span class="share-pct">7.7% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio</span>
+                <span class="policy-acao">Manter atenção elevada — crime recorrente nas últimas 2 semanas</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Johnson & Bowers 2004: risco near-repeat se propaga por 2–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (37%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Domingo (17%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>67%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>1507</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:55px"></div></div><span class="tbar-pct">37%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:44px"></div></div><span class="tbar-pct">30%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:25px"></div></div><span class="tbar-pct">17%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:24px"></div></div><span class="tbar-pct">16%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• n_dd_lag1=1 → demanda explícita da população adicionada como reforço político</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a083ffff">
+    <div class="card-header" style="border-left: 6px solid #e67e22">
+        <div class="hex-id">89a8a06a083ffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#e67e22">t+1: 80.1%</span>
+            <span class="prob-badge prob-t2">t+2: 79.1%</span>
+            <span class="prob-badge prob-t4">t+4: 79.0%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:78%"></div>
+                    <span class="share-pct">38.9% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:39%"></div>
+                    <span class="share-pct">19.3% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:20%"></div>
+                    <span class="share-pct">10.2% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (38%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (22%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>70%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>3758</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:56px"></div></div><span class="tbar-pct">38%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:48px"></div></div><span class="tbar-pct">32%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:23px"></div></div><span class="tbar-pct">16%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:21px"></div></div><span class="tbar-pct">14%</span></div><div class="tbar-row"><span class="tbar-label">Não informado</span><div class="tbar"><div class="tbar-fill" style="width:0px"></div></div><span class="tbar-pct">0%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=53 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a493ffff">
+    <div class="card-header" style="border-left: 6px solid #e67e22">
+        <div class="hex-id">89a8a06a493ffff</div>
+        <div class="area-name">Praia de Botafogo - Rua Marquês de Abrantes</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#e67e22">t+1: 79.8%</span>
+            <span class="prob-badge prob-t2">t+2: 78.6%</span>
+            <span class="prob-badge prob-t4">t+4: 77.8%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:89%"></div>
+                    <span class="share-pct">44.5% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Desordem urbana difusa (múltiplos fatores)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:19%"></div>
+                    <span class="share-pct">9.6% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 Múltiplos órgãos (Comlurb, RioLuz, SEOP, GM-Rio)</span>
+                <span class="policy-acao">Realizar varredura coordenada multi-órgão — desordem difusa detectada em múltiplas categorias</span>
+                <span class="policy-prazo">⏱ Curto prazo</span>
+                <span class="policy-ev">📚 Wilson & Kelling 1982: broken windows; desordem difusa requer resposta integrada</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:18%"></div>
+                    <span class="share-pct">8.8% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (47%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Domingo (18%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>73%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>1039</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:70px"></div></div><span class="tbar-pct">47%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:38px"></div></div><span class="tbar-pct">26%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:23px"></div></div><span class="tbar-pct">16%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:17px"></div></div><span class="tbar-pct">12%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=33 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+<div class="card" id="89a8a06a09bffff">
+    <div class="card-header" style="border-left: 6px solid #e67e22">
+        <div class="hex-id">89a8a06a09bffff</div>
+        <div class="area-name">Presidente Vargas - Campo de Santana - Central do Brasil - Cinelândia</div>
+        <div class="prob-row">
+            <span class="prob-badge" style="background:#e67e22">t+1: 79.5%</span>
+            <span class="prob-badge prob-t2">t+2: 78.5%</span>
+            <span class="prob-badge prob-t4">t+4: 79.1%</span>
+        </div>
+        
+        
+    <div class="tags">
+        <span class="tag tag-pattern">📊 hotspot crônico</span>
+        <span class="tag tag-season">📅 pico em dezembro–janeiro (fim de ano / verão)</span>
+        <span class="tag tag-dominio tag-green">🏴 Sem domínio</span>
+        <span class="tag tag-jurisd">⚖️ Municipal</span>
+        
+    </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📉 POR QUE O RISCO É ALTO</div>
+        
+        <div class="driver-row">
+            <div class="driver-rank">1</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Volume de crimes nas últimas 12 semanas (hotspot crônico)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:93%"></div>
+                    <span class="share-pct">46.3% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio + Prefeitura (coordenação estrutural)</span>
+                <span class="policy-acao">Hotspot crônico — requer intervenção estrutural combinada (policiamento + desordem urbana)</span>
+                <span class="policy-prazo">⏱ Médio prazo (estrutural)</span>
+                <span class="policy-ev">📚 Weisburd 2015: lei dos 5% — concentração persistente exige intervenção duradoura</span>
+            </div>
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">2</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Cobertura de câmeras CIVITAS em área vizinha (ring-1) (câmera presente — verificar cobertura)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:23%"></div>
+                    <span class="share-pct">11.4% da explicação</span>
+                </div>
+                
+            </div>
+        </div>
+        <div class="driver-row">
+            <div class="driver-rank">3</div>
+            <div class="driver-content">
+                <div class="driver-label">⬆️ Histórico recente de crimes na área (semana passada)</div>
+                <div class="driver-share-bar">
+                    <div class="bar" style="width:20%"></div>
+                    <span class="share-pct">9.9% da explicação</span>
+                </div>
+                
+            <div class="policy-item">
+                <span class="policy-orgao">🏛 GM-Rio / PMERJ (coordenado)</span>
+                <span class="policy-acao">Aumentar presença ostensiva — histórico recente indica padrão near-repeat</span>
+                <span class="policy-prazo">⏱ Imediato</span>
+                <span class="policy-ev">📚 Mohler et al. 2011/2015: near-repeat tem janela de 1–4 semanas</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🕐 QUANDO O CRIME OCORRE</div>
+        
+        <div class="temporal-grid">
+            <div class="temporal-stat"><strong>Faixa de pico</strong><br>Noite (18–24h) (43%)</div>
+            <div class="temporal-stat"><strong>Dia de pico</strong><br>Sabado (21%)</div>
+            <div class="temporal-stat"><strong>% noturno</strong><br>70%</div>
+            <div class="temporal-stat"><strong>Ocorrências mapeadas</strong><br>2184</div>
+        </div>
+        <div class="tbar-container"><div class="tbar-row"><span class="tbar-label">Noite (18–24h)</span><div class="tbar"><div class="tbar-fill" style="width:64px"></div></div><span class="tbar-pct">43%</span></div><div class="tbar-row"><span class="tbar-label">Madrugada (00–06h)</span><div class="tbar"><div class="tbar-fill" style="width:39px"></div></div><span class="tbar-pct">26%</span></div><div class="tbar-row"><span class="tbar-label">Manhã (06–12h)</span><div class="tbar"><div class="tbar-fill" style="width:24px"></div></div><span class="tbar-pct">16%</span></div><div class="tbar-row"><span class="tbar-label">Tarde (12–18h)</span><div class="tbar"><div class="tbar-fill" style="width:21px"></div></div><span class="tbar-pct">14%</span></div><div class="tbar-row"><span class="tbar-label">Não informado</span><div class="tbar"><div class="tbar-fill" style="width:0px"></div></div><span class="tbar-pct">0%</span></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🚔 POLICIAMENTO RECOMENDADO</div>
+        <div class="pol-item"><span class="pol-modal">🚔 Viatura GM-Rio (patrulha rotineira aumentada)</span> — Hotspot crônico — presença continuada e visível <span class="pol-prazo">(Médio prazo)</span></div><div class="pol-item"><span class="pol-modal">🚔 Moto-patrulha GM-Rio</span> — Complementar viatura para cobertura de vielas/calçadas <span class="pol-prazo">(Curto prazo)</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ RESTRIÇÕES INSTITUCIONAIS</div>
+        <div class="constraints">Sem restrições institucionais — ação municipal direta plenamente viável.</div>
+    </div>
+
+    <div class="section section-audit">
+        <div class="section-title">🔍 INTERPRETAÇÕES APLICADAS (auditoria)</div>
+        <div class="audit">• y_lag*: classificado como «hotspot crônico» → prazo Médio prazo (estrutural)<br>• Câmeras: n_cameras_ring1=32 → saturação, manutenção recomendada</div>
+    </div>
+</div>
+</div>
+
+<div style="text-align:center;padding:24px;color:#94a3b8;font-size:0.78rem">
+    CompStat-Rio • Claude Impact Lab Hackathon Rio • 24/05/2026 • Modelo: Logit L2 | AUC-PR validado
+</div>
+
+</body>
+</html>
