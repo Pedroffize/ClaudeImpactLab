@@ -1,13 +1,13 @@
-# Research
+# Ideation
 
-Papers, dados e pesquisa preliminar relevantes para o projeto.
+Brainstorms, mockups e decisões de design do projeto.
 
-## Papers / Referências
-
--
-
-## Datasets
+## Brainstorm inicial
 
 -
 
-## Notas
+## Decisões de escopo
+
+-
+
+## Mockups / Fluxos
